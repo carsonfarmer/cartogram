@@ -1,0 +1,16 @@
+; Metadata information for cartogram-plugin
+
+[general]
+name=Cartogram Creator
+author=Carson Farmer
+email=carson.farmer@gmail.com
+qgisMinimumVersion=1.3
+qgisMaximumVersion=2.2
+description=Cartogram Creator plugin for QGIS
+version=0.04
+experimental=True
+deprecated=False
+homepage=http://github.com/cfarmer/cartogram-plugin
+repository=http://github.com/cfarmer/cartogram-plugin
+tracker=http://github.com/cfarmer/cartogram-plugin/issues
+

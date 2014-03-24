@@ -37,8 +37,8 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from qgis.core import *
-import os, sys, string, math
-from frmCartogram import Ui_Dialog
+import math
+from form import Ui_Dialog
 
 class Dialog(QDialog, Ui_Dialog):
     def __init__(self, iface):
@@ -60,10 +60,15 @@ class Dialog(QDialog, Ui_Dialog):
         self.inFields.clear()
         changedLayer = self.getVectorLayerByName(inputLayer)
         changedFields = self.getFieldList(changedLayer)
-        for i in changedFields:
-            if changedFields[i].type() == QVariant.Int or \
-            changedFields[i].type() == QVariant.Double:
-                self.inFields.addItem(unicode(changedFields[i].name()))
+	for cf in changedFields:
+            if cf.type() == QVariant.Int or \
+            cf.type() == QVariant.Double:
+                self.inFields.addItem(unicode(cf.name()))
+
+        for cf in changedFields:
+            if cf.type() == QVariant.Int or \
+            cf.type() == QVariant.Double:
+                self.inFields.addItem(unicode(cf.name()))
     
     def accept(self):
         if self.inShape.currentText() == "":
@@ -78,7 +83,7 @@ class Dialog(QDialog, Ui_Dialog):
             self.progressBar.setValue(5)
             outPath = self.outShape.text()
             self.progressBar.setValue(10)
-            if outPath.contains("\\"):
+            if "\\" in outPath:
                 outPath.replace("\\", "/")
             self.progressBar.setValue(15)
             tempList = self.cartogram(inLayer, outPath, iterations, unicode(inField), keep, self.progressBar)
@@ -97,8 +102,9 @@ class Dialog(QDialog, Ui_Dialog):
                     myInfo.setFile(myBase + ".prj")
                     if (myInfo.exists()):
                         QFile.remove(myBase + ".prj")
-            outName = outPath.right((outPath.length() - outPath.lastIndexOf("/")) - 1)
-            outName = outName.left(outName.length())             
+            idx = outPath.rfind("/") - len(outPath) + 1
+            outName = outPath[idx:]
+            outName = outName[:len(outName)]
             self.progressBar.setValue(100)
             self.outShape.clear()
             addToTOC = QMessageBox.question(self, "Cartogram Creator", 
@@ -114,15 +120,15 @@ class Dialog(QDialog, Ui_Dialog):
         self.outShape.clear()
         fileDialog = QFileDialog()
         fileDialog.setConfirmOverwrite(False)
-        outName = fileDialog.getSaveFileName(self,
-        "Cartogram Creator",".", "Shapefiles (*.shp)")
+        outName = fileDialog.getSaveFileName(self,"Cartogram Creator",".", "Shapefiles (*.shp)")
         fileCheck = QFile(outName)
         if fileCheck.exists():
             QMessageBox.warning(self, "Cartogram Creator", "Cannot overwrite existing shapefile...")
         else:
             filePath = QFileInfo(outName).absoluteFilePath()
-            if filePath.right(4) != ".shp": filePath = filePath + ".shp"
-            if not outName.isEmpty():
+            if filePath[-4:] != ".shp":
+                filePath = filePath + ".shp"
+            if outName:
                 self.outShape.clear()
                 self.outShape.insert(filePath)
 
@@ -135,10 +141,11 @@ class Dialog(QDialog, Ui_Dialog):
         dTotalArea = 0
         dTotalValue = 0
         tempList = []
-        for (i, attr) in provider.fields().iteritems():
-            if (inField == attr.name()): index = i #get 'area' field index
+        for (i, attr) in [a for a in enumerate(provider.fields().toList())]:
+            if (inField == attr.name()): 
+                index = i #get 'area' field index
         basePath = outPath
-        basePath.remove(".shp")
+        basePath.replace(".shp", "")
         for i in range(1, iterations + 1):
             if (i > 1):
                 vlayer = QgsVectorLayer(tempPath, "", "ogr")
@@ -149,11 +156,10 @@ class Dialog(QDialog, Ui_Dialog):
             else:
                 tempPath = outPath + ".shp"
             progressBar.setValue(20)
-            (dMean, aLocal, dForceReductionFactor, dTotalArea, dTotalValue) = self.getInfo(provider, index)
+            (dMean, aLocal, dForceReductionFactor, dTotalArea, dTotalValue) = self.getInfo(vlayer, provider, index)
             progressBar.setValue(40)
             feature = QgsFeature()
             allAttrs = provider.attributeIndexes()
-            provider.select(allAttrs)
             fieldList = self.getFieldList(vlayer)
             sRs = provider.crs()
             progressBar.setValue(45)
@@ -163,13 +169,13 @@ class Dialog(QDialog, Ui_Dialog):
             progressBar.setValue(50)
             ink = 100.00 / provider.featureCount()
             start = 1.00
-            while provider.nextFeature(feature):
+            for feature in provider.getFeatures():
                 geometry = feature.geometry()
                 geometry2 = self.TransformGeometry(aLocal, dForceReductionFactor, geometry, totalFeats)
                 outfeat.setGeometry(geometry2)
-                atMap = feature.attributeMap()
-                for h in atMap.keys():
-                    outfeat.addAttribute(h, atMap[h])
+
+                outfeat.setAttributes(feature.attributes())
+
                 writer.addFeature(outfeat)
                 start = start + ink
                 progressBar.setValue(start)
@@ -192,14 +198,14 @@ class Dialog(QDialog, Ui_Dialog):
         vprovider = vlayer.dataProvider()
         feat = QgsFeature()
         allAttrs = vprovider.attributeIndexes()
-        vprovider.select( allAttrs )
+        vlayer.select( allAttrs )
         myFields = vprovider.fields()
-        return myFields    
+        return myFields
 
 # Gets the information required for calcualting size reduction factor
-    def getInfo(self, provider, index):
+    def getInfo(self, vlayer, provider, index):
         allAttrs = provider.attributeIndexes()
-        provider.select(allAttrs)
+        vlayer.select(allAttrs)
         featCount = provider.featureCount()
         sRs = provider.crs()
         feat = QgsFeature()
@@ -208,7 +214,7 @@ class Dialog(QDialog, Ui_Dialog):
         cy = 0
         dAreaTotal = 0.00
         dTotalValue = 0.00
-        while provider.nextFeature(feat):
+        for feat in provider.getFeatures():
             lfeat = Holder()
             geom = QgsGeometry(feat.geometry())
             dDistArea = QgsDistanceArea()
@@ -216,8 +222,9 @@ class Dialog(QDialog, Ui_Dialog):
             lfeat.dArea = area # save area of this feature
             lfeat.lFID = feat.id() # save id for this feature
             dAreaTotal = dAreaTotal + area # save total area of all polygons
-            atMap = feat.attributeMap()
-            lfeat.dValue = atMap[index].toInt()[0] # save 'area' value for this feature
+
+            atMap = feat.attributes()
+            lfeat.dValue = atMap[index] # save 'area' value for this feature
             #QMessageBox.information(self, "Generate Centroids", unicode(lfeat.dValue))
             dTotalValue += lfeat.dValue
             centroid = geom.centroid()

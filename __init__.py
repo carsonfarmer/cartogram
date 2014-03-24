@@ -47,5 +47,5 @@ def qgisMinimumVersion():
   return "1.3"
 
 def classFactory(iface):
-  from Cartogram import CartogramPlugin
+  from plugin import CartogramPlugin
   return CartogramPlugin(iface)

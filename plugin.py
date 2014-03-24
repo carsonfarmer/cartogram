@@ -39,9 +39,8 @@ from PyQt4.QtGui import *
 from qgis.core import *
 from qgis.gui import *
 
-import doCartogram
 import resources
-import os
+import doCartogram
 
 class CartogramPlugin:
   def __init__(self, iface):
@@ -63,11 +62,16 @@ class CartogramPlugin:
     self.iface.addPluginToMenu("&Cartogram Creator", self.action)
     self.iface.addPluginToMenu("&Cartogram Creator", self.helpaction)
 
+    # connect to signal renderComplete which is emitted when canvas
+    # rendering is done
+    QObject.connect(self.iface.mapCanvas(), SIGNAL("renderComplete(QPainter *)"), self.render)
+
   def unload(self):
     # Remove the plugin
     self.iface.removePluginMenu("&Cartogram Creator", self.action)
     self.iface.removePluginMenu("&Cartogram Creator", self.helpaction)
     self.iface.removeToolBarIcon(self.action)
+    QObject.disconnect(self.iface.mapCanvas(), SIGNAL("renderComplete(QPainter *)"), self.render)
 
   def helprun(self):
     # print "Help pressed..."
@@ -90,3 +94,6 @@ class CartogramPlugin:
   def run(self):
     d = doCartogram.Dialog(self.iface)
     d.exec_()
+
+  def render(self, painter):
+    pass
