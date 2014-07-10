@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/" >
+        <file>cartogram.png</file>
+        <file>cartogramhelp.png</file>
+    </qresource>
+</RCC>

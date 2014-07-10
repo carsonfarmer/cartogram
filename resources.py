@@ -2,8 +2,8 @@
 
 # Resource object code
 #
-# Created: Mon Oct 12 22:21:27 2009
-#      by: The Resource Compiler for PyQt (Qt v4.5.0)
+# Created: lun mar 24 20:18:44 2014
+#      by: The Resource Compiler for PyQt (Qt v4.8.4)
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -237,17 +237,15 @@ qt_resource_data = "\
 \x44\xae\x42\x60\x82\
 "
 
+
 qt_resource_name = "\
-\x00\x0d\
-\x0b\x6f\x3d\x27\
-\x00\x63\
-\x00\x61\x00\x72\x00\x74\x00\x6f\x00\x67\x00\x72\x00\x61\x00\x6d\x00\x2e\x00\x70\x00\x6e\x00\x67\
-\x00\x11\
-\x02\x44\x76\x47\
-\x00\x63\
-\x00\x61\x00\x72\x00\x74\x00\x6f\x00\x67\x00\x72\x00\x61\x00\x6d\x00\x68\x00\x65\x00\x6c\x00\x70\x00\x2e\x00\x70\x00\x6e\x00\x67\
-\
+\x00\x0d\x0b\x6f\x3d\x27\x00\x63\x00\x61\x00\x72\x00\x74\x00\x6f\
+\x00\x67\x00\x72\x00\x61\x00\x6d\x00\x2e\x00\x70\x00\x6e\x00\x67\
+\x00\x11\x02\x44\x76\x47\x00\x63\x00\x61\x00\x72\x00\x74\x00\x6f\
+\x00\x67\x00\x72\x00\x61\x00\x6d\x00\x68\x00\x65\x00\x6c\x00\x70\
+\x00\x2e\x00\x70\x00\x6e\x00\x67\
 "
+
 
 qt_resource_struct = "\
 \x00\x00\x00\x00\x00\x02\x00\x00\x00\x02\x00\x00\x00\x01\
@@ -255,10 +253,20 @@ qt_resource_struct = "\
 \x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\
 "
 
+
 def qInitResources():
-    QtCore.qRegisterResourceData(0x01, qt_resource_struct, qt_resource_name, qt_resource_data)
+    QtCore.qRegisterResourceData(0x01,
+                                 qt_resource_struct,
+                                 qt_resource_name,
+                                 qt_resource_data
+                                 )
+
 
 def qCleanupResources():
-    QtCore.qUnregisterResourceData(0x01, qt_resource_struct, qt_resource_name, qt_resource_data)
+    QtCore.qUnregisterResourceData(0x01,
+                                   qt_resource_struct,
+                                   qt_resource_name,
+                                   qt_resource_data
+                                   )
 
 qInitResources()
