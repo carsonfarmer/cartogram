@@ -254,14 +254,14 @@ class Dialog(QDialog, Ui_Dialog):
         vprovider = vlayer.dataProvider()
         feat = QgsFeature()
         allAttrs = vprovider.attributeIndexes()
-        vlayer.select(allAttrs)
+        # vlayer.select(allAttrs)
         myFields = vprovider.fields()
         return myFields
 
     # Gets the information required for calcualting size reduction factor
     def getInfo(self, vlayer, provider, index):
         allAttrs = provider.attributeIndexes()
-        vlayer.select(allAttrs)
+        # vlayer.select(allAttrs)
         featCount = provider.featureCount()
         sRs = provider.crs()
         feat = QgsFeature()
