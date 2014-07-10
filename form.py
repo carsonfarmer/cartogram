@@ -17,11 +17,15 @@ except AttributeError:
 
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
+
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig, _encoding)
+
 except AttributeError:
+
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
+
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -64,7 +68,11 @@ class Ui_Dialog(object):
         self.label = QtGui.QLabel(Dialog)
         self.label.setObjectName(_fromUtf8("label"))
         self.hboxlayout1.addWidget(self.label)
-        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        spacerItem = QtGui.QSpacerItem(40,
+                                       20,
+                                       QtGui.QSizePolicy.Expanding,
+                                       QtGui.QSizePolicy.Minimum
+                                       )
         self.hboxlayout1.addItem(spacerItem)
         self.spnIterations = QtGui.QSpinBox(Dialog)
         self.spnIterations.setProperty("value", 5)
@@ -75,13 +83,22 @@ class Ui_Dialog(object):
         self.chkKeep.setChecked(True)
         self.chkKeep.setObjectName(_fromUtf8("chkKeep"))
         self.gridlayout.addWidget(self.chkKeep, 7, 0, 1, 2)
-        spacerItem1 = QtGui.QSpacerItem(356, 31, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        spacerItem1 = QtGui.QSpacerItem(356,
+                                        31,
+                                        QtGui.QSizePolicy.Minimum,
+                                        QtGui.QSizePolicy.Expanding
+                                        )
         self.gridlayout.addItem(spacerItem1, 8, 0, 1, 2)
         self.txtProgress = QtGui.QLabel(Dialog)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed,
+                                       QtGui.QSizePolicy.Fixed
+                                       )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.txtProgress.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(self
+                                     .txtProgress
+                                     .sizePolicy()
+                                     .hasHeightForWidth())
         self.txtProgress.setSizePolicy(sizePolicy)
         self.txtProgress.setMinimumSize(QtCore.QSize(113, 20))
         self.txtProgress.setText(_fromUtf8(""))
@@ -89,7 +106,9 @@ class Ui_Dialog(object):
         self.gridlayout.addWidget(self.txtProgress, 9, 0, 1, 1)
         self.buttonBox_2 = QtGui.QDialogButtonBox(Dialog)
         self.buttonBox_2.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox_2.setStandardButtons(QtGui.QDialogButtonBox.Close|QtGui.QDialogButtonBox.NoButton|QtGui.QDialogButtonBox.Ok)
+        self.buttonBox_2.setStandardButtons(QtGui.QDialogButtonBox.Close |
+                                            QtGui.QDialogButtonBox.NoButton |
+                                            QtGui.QDialogButtonBox.Ok)
         self.buttonBox_2.setObjectName(_fromUtf8("buttonBox_2"))
         self.gridlayout.addWidget(self.buttonBox_2, 9, 1, 1, 1)
         self.progressBar = QtGui.QProgressBar(Dialog)
@@ -101,8 +120,14 @@ class Ui_Dialog(object):
         self.gridlayout.addWidget(self.progressBar, 10, 0, 1, 2)
 
         self.retranslateUi(Dialog)
-        QtCore.QObject.connect(self.buttonBox_2, QtCore.SIGNAL(_fromUtf8("accepted()")), Dialog.accept)
-        QtCore.QObject.connect(self.buttonBox_2, QtCore.SIGNAL(_fromUtf8("rejected()")), Dialog.close)
+        QtCore.QObject.connect(self.buttonBox_2,
+                               QtCore.SIGNAL(_fromUtf8("accepted()")),
+                               Dialog.accept
+                               )
+        QtCore.QObject.connect(self.buttonBox_2,
+                               QtCore.SIGNAL(_fromUtf8("rejected()")),
+                               Dialog.close
+                               )
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
@@ -111,6 +136,9 @@ class Ui_Dialog(object):
         self.label_4.setText(_translate("Dialog", "Area Field:", None))
         self.label_2.setText(_translate("Dialog", "Output Shapefile:", None))
         self.toolOut.setText(_translate("Dialog", "Browse", None))
-        self.label.setText(_translate("Dialog", "Number of iterations to perform:", None))
-        self.chkKeep.setText(_translate("Dialog", "Keep intermediate shapefiles", None))
-
+        self.label.setText(_translate("Dialog",
+                                      "Number of iterations to perform:",
+                                      None))
+        self.chkKeep.setText(_translate("Dialog",
+                                        "Keep intermediate shapefiles",
+                                        None))
