@@ -71,10 +71,6 @@ class Dialog(QDialog, Ui_Dialog):
             if cf.type() == QVariant.Int or cf.type() == QVariant.Double:
                 self.inFields.addItem(unicode(cf.name()))
 
-        for cf in changedFields:
-            if cf.type() == QVariant.Int or cf.type() == QVariant.Double:
-                self.inFields.addItem(unicode(cf.name()))
-
     def accept(self):
         if self.inShape.currentText() == "":
             QMessageBox.information(self,
